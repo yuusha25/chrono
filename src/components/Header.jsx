@@ -62,7 +62,7 @@ const Header = () => {
 
         {/* Sign Up Button */}
         <button className="px-[18px] py-2 bg-[#365486] rounded-[10px] flex items-center hover:bg-[#2a4675]">
-          <Link to="/Sign-Up" className="text-white font-medium">
+          <Link to="/SignUp" className="text-white font-medium">
             Sign up
           </Link>
         </button>

@@ -6,8 +6,10 @@ import Playbacks from "./components/Playbacks";
 import Instructions from "./components/Instructions";
 import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
+import SignUp from "./components/Sign-Up";
+import SignIn from "./components/Sign-In";
 
-const Home = () => (
+const MainPage = () => (
   <div className="mx-auto font-poppins">
     <Header />
     <main className="mt-[120px] container max-w-5xl mx-auto px-4 py-8 flex-grow">
@@ -23,27 +25,26 @@ const Home = () => (
   </div>
 );
 
-// Playbacks
-const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} /> {/* Halaman Utama */}
-        <Route
-          path="/playbacks"
-          element={
-            <div className="font-poppins">
-              <Header />
-              <main className="mt-[120px]">
-                <Playbacks /> {/* Halaman Playbacks dengan struktur sendiri */}
-                <Footer />
-              </main>
-            </div>
-          }
-        />
-      </Routes>
-    </Router>
-  );
-};
+const PlaybacksPage = () => (
+  <div className="font-poppins">
+    <Header />
+    <main className="mt-[120px]">
+      <Playbacks /> {/* Playbacks page with its own layout */}
+      <Footer />
+    </main>
+  </div>
+);
+
+const App = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<MainPage />} /> {/* Main Page */}
+      <Route path="/playbacks" element={<PlaybacksPage />} />{" "}
+      {/* Playbacks Page */}
+      <Route path="/signup" element={<SignUp />} /> {/* Sign Up Page */}
+      <Route path="/signin" element={<SignIn />} /> {/* Sign In Page */}
+    </Routes>
+  </Router>
+);
 
 export default App;
