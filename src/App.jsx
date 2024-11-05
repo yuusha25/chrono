@@ -8,6 +8,8 @@ import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
 import SignUp from "./components/Sign-Up";
 import SignIn from "./components/Sign-In";
+import VerifyEmail from "./components/VeryfyEmail";
+import ErrorPage from "./components/ErrorPage";
 
 const MainPage = () => (
   <div className="mx-auto font-poppins">
@@ -43,6 +45,9 @@ const App = () => (
       {/* Playbacks Page */}
       <Route path="/signup" element={<SignUp />} /> {/* Sign Up Page */}
       <Route path="/signin" element={<SignIn />} /> {/* Sign In Page */}
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="*" element={<ErrorPage />} />{" "}
+      {/* Catch-all for undefined routes */}
     </Routes>
   </Router>
 );

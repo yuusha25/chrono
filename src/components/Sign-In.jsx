@@ -2,35 +2,19 @@ import { Link } from "react-router-dom";
 
 const SignIn = () => {
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-10 bg-gray-100 font-poppins">
-      {/* CCTV Info */}
-      <div className="hidden md:flex flex-col items-center justify-center text-center">
-        <img
-          src="./src/assets/cctv-logo.svg"
-          alt="CCTV Logo"
-          className="w-64 h-64 mb-6"
-        />
-        <h2 className="text-gray-800 text-2xl font-semibold leading-normal">
-          Always monitoring your day
-        </h2>
-        <p className="text-neutral-400 text-sm font-medium mt-2">
-          On the shot, you see the main screen with all the rooms, and users can
-          control each camera with the help of remote control.
-        </p>
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100 font-poppins">
       {/* Sign In Form */}
-      <div className="w-full max-w-md bg-sky-50 rounded-3xl p-8 shadow-lg mx-auto">
+      <div className="w-full max-w-md bg-white rounded-lg p-8 shadow-md">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-semibold">Sign In</h1>
           <p className="text-gray-400">Sign in to stay connected.</p>
         </div>
 
         {/* Input Form */}
-        <form className="space-y-6">
+        <form className="space-y-4">
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-gray-400 text-base">
+            <label htmlFor="email" className="block text-gray-600 text-sm">
               Email
             </label>
             <input
@@ -38,14 +22,14 @@ const SignIn = () => {
               id="email"
               name="email"
               placeholder="johndoe@example.com"
-              className="w-full px-4 py-2 mt-1 bg-white rounded border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+              className="w-full px-4 py-2 mt-1 bg-gray-50 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             />
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-gray-400 text-base">
+            <label htmlFor="password" className="block text-gray-600 text-sm">
               Password
             </label>
             <input
@@ -53,38 +37,26 @@ const SignIn = () => {
               id="password"
               name="password"
               placeholder="********"
-              className="w-full px-4 py-2 mt-1 bg-white rounded border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+              className="w-full px-4 py-2 mt-1 bg-gray-50 rounded border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               required
             />
-          </div>
-
-          <div className="flex justify-between items-center">
-            <label className="flex items-center space-x-2 text-gray-400">
-              <input type="checkbox" className="form-checkbox h-4 w-4 shadow" />
-              <span>Remember me?</span>
-            </label>
-            <a href="#" className="text-stone-900 hover:underline">
-              Forgot Password?
-            </a>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-[#365486] rounded text-white text-base hover:bg-[#2a4675] transition duration-200"
+            className="w-full py-2 bg-[#365486] text-white rounded hover:bg-[#2a4675] transition duration-200"
           >
             Sign in
           </button>
         </form>
 
-        {/* Other Sign-In Options */}
+        {/* Sign in with Google Button */}
         <div className="text-center mt-6">
-          <p className="text-slate-800 mb-4">or sign in with other accounts?</p>
-
-          {/* Sign Up With Google Button */}
+          <p className="text-gray-500">or sign in with</p>
           <a
-            href="#"
-            className="mt-4 inline-flex items-center justify-center w-full max-w-[250px] p-3 bg-[#365486] rounded-md text-white text-base font-normal hover:bg-[#2a4675] transition duration-200"
+            href="http://localhost:8080/auth/google"
+            className="mt-4 inline-flex items-center justify-center w-full p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-base font-normal transition duration-200"
           >
             <img
               src="./src/assets/Gmail.svg"
@@ -93,11 +65,14 @@ const SignIn = () => {
             />
             Sign in with Google
           </a>
+        </div>
 
-          <p className="mt-4">
+        {/* Additional Links */}
+        <div className="text-center mt-6 text-gray-500 text-sm">
+          <p>
             Don’t have an account?
-            <Link to="/signup" className="text-blue-400 hover:underline">
-              Click here to sign up.
+            <Link to="/signup" className="text-blue-600 hover:underline ml-1">
+              Sign up
             </Link>
           </p>
         </div>

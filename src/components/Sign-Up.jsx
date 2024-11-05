@@ -3,12 +3,9 @@ import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
-    phoneNumber: "",
     password: "",
-    confirmPassword: "",
     termsAgreed: false,
   });
 
@@ -20,180 +17,118 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic
     console.log("Form submitted with:", formData);
+
+    try {
+      const response = await fetch("http://localhost:8080/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Signup success:", data);
+        // Redirect or show success message
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message);
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
+    }
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-10 bg-gray-100 font-poppins">
-      <div className="bg-sky-50 rounded-3xl p-8 shadow-lg">
+    <div className="min-h-screen flex items-center justify-center px-6 bg-gray-100 font-poppins">
+      <div className="bg-white rounded-3xl p-8 shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-semibold text-center">Sign Up</h2>
         <p className="text-gray-400 text-center mt-2 mb-6">
           Create your account
         </p>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-600 mb-1" htmlFor="first-name">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="first-name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="John"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-600 mb-1" htmlFor="last-name">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="last-name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Doe"
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-600 mb-1">Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
           </div>
 
-          <div className="mt-4">
-            <label className="block text-gray-600 mb-1" htmlFor="email">
-              Email
-            </label>
+          <div>
+            <label className="block text-gray-600 mb-1">Email</label>
             <input
               type="email"
-              id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
-              placeholder="johndoe@example.com"
               required
             />
           </div>
 
-          <div className="mt-4">
-            <label className="block text-gray-600 mb-1" htmlFor="phone">
-              Phone No.
-            </label>
+          <div>
+            <label className="block text-gray-600 mb-1">Password</label>
             <input
-              type="tel"
-              id="phone"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              type="password"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
-              placeholder="+62 812 3456 7890"
               required
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-            <div>
-              <label className="block text-gray-600 mb-1" htmlFor="password">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="********"
-                required
-              />
-            </div>
-            <div>
-              <label
-                className="block text-gray-600 mb-1"
-                htmlFor="confirm-password"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirm-password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="********"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-center">
+          <div className="flex items-center mt-4">
             <input
               type="checkbox"
-              id="agree"
               name="termsAgreed"
               checked={formData.termsAgreed}
               onChange={handleChange}
               className="mr-2 border border-gray-300 rounded"
               required
             />
-            <label htmlFor="agree" className="text-gray-600 text-sm">
+            <label className="text-gray-600 text-sm">
               I agree with the terms of use
             </label>
           </div>
 
           <button
             type="submit"
-            className="mt-6 w-full py-2 bg-[#365486] rounded text-white text-base hover:bg-[#2a4675] focus:ring-2 focus:ring-sky-500 focus:outline-none"
+            className="mt-6 w-full py-2 bg-[#365486] text-white rounded hover:bg-[#2a4675] transition duration-200"
           >
             Sign up
           </button>
         </form>
 
         <div className="text-center mt-6">
-          <p className="text-gray-400">or sign up with other accounts?</p>
+          <p className="text-gray-400">or sign up with Google</p>
           <a
             href="http://localhost:8080/auth/google"
-            className="mt-4 inline-flex items-center justify-center w-full max-w-[250px] p-3 bg-[#365486] rounded-md text-white text-base font-normal hover:bg-[#2a4675] transition duration-200"
+            className="mt-4 flex items-center justify-center w-full py-2 bg-gray-100 rounded text-gray-600 hover:bg-gray-200 transition duration-200"
           >
             <img
               src="./src/assets/Gmail.svg"
               alt="Google logo"
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 mr-2"
             />
             Sign up with Google
           </a>
 
           <p className="mt-4 text-gray-600">
             Already have an Account?
-            <Link to="/signin" className="text-blue-400 ">
+            <Link to="/signin" className="text-blue-600 ml-1">
               Sign in
             </Link>
-          </p>
-        </div>
-      </div>
-
-      <div className="hidden md:flex justify-center items-center">
-        <div className="text-center">
-          <img
-            src="./src/assets/cctv-logo.svg"
-            alt="CCTV"
-            className="mx-auto w-56 scale-x-[-1]"
-          />
-          <h2 className="text-2xl font-semibold mt-6">
-            Always monitoring your day
-          </h2>
-          <p className="text-gray-400 mt-4 text-sm">
-            On the shot, you see the main screen with all the rooms, and users
-            can control each camera with the help of remote control.
           </p>
         </div>
       </div>
