@@ -160,8 +160,8 @@ const SignUp = () => {
 
         <div className="text-center mt-6">
           <p className="text-gray-400">or sign up with other accounts?</p>
-          <Link
-            to="#"
+          <a
+            href="http://localhost:8080/auth/google"
             className="mt-4 inline-flex items-center justify-center w-full max-w-[250px] p-3 bg-[#365486] rounded-md text-white text-base font-normal hover:bg-[#2a4675] transition duration-200"
           >
             <img
@@ -170,7 +170,7 @@ const SignUp = () => {
               className="w-6 h-6 mr-2"
             />
             Sign up with Google
-          </Link>
+          </a>
 
           <p className="mt-4 text-gray-600">
             Already have an Account?

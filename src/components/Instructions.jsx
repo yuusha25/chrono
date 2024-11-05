@@ -1,5 +1,3 @@
-import React from "react";
-
 const CCTVInstructions = () => {
   return (
     <div className="mt-12 bg-white shadow rounded-lg p-8">
