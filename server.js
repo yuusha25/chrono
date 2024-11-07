@@ -3,11 +3,11 @@ import express from "express";
 import passport from "passport";
 import mongoose from "mongoose";
 import session from "express-session";
-import cors from "cors"; // Impor cors
+import cors from "cors";
 import setupAuthRoutes from "./src/routes/authGoogle.js";
 import manualAuthRoutes from "./src/routes/authManual.js";
+import userRoutes from "./src/routes/userRoutes.js";
 
-// Load .env configuration
 dotenv.config();
 
 // Koneksi ke MongoDB
@@ -25,9 +25,9 @@ const app = express();
 // Middleware CORS
 app.use(
   cors({
-    origin: "http://localhost:5173", // Ganti dengan URL frontend Anda
-    methods: ["GET", "POST"], // Metode yang diizinkan
-    allowedHeaders: ["Content-Type"], // Header yang diizinkan
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
@@ -51,6 +51,8 @@ setupAuthRoutes(app);
 
 // Rute manual auth
 app.use("/auth", manualAuthRoutes);
+
+app.use("/api", userRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

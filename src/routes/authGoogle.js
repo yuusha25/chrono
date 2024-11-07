@@ -1,4 +1,3 @@
-// src/routes/auth.js
 import passport from "passport";
 import dotenv from "dotenv";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -25,11 +24,10 @@ passport.use(
             googleId: profile.id,
             name: profile.displayName, // Assuming you want to save the name
             email: profile.emails[0].value, // Getting the user's email
-            // Add other user fields as necessary
+            isVerified: true,
           });
         }
 
-        // Return the found or newly created user
         return done(null, user);
       } catch (error) {
         return done(error, null);
@@ -54,7 +52,6 @@ passport.deserializeUser(async (id, done) => {
 
 // Routes for authentication
 const setupAuthRoutes = (app) => {
-  // Redirect to Google login
   app.get(
     "/auth/google",
     passport.authenticate("google", { scope: ["profile", "email"] }) // Add 'email' scope to access user's email
@@ -81,7 +78,7 @@ const setupAuthRoutes = (app) => {
   app.get("/logout", (req, res) => {
     req.logout((err) => {
       if (err) {
-        return res.status(500).send("Error logging out.");
+        return res.next(err);
       }
       res.redirect("/");
     });

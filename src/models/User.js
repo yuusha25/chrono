@@ -2,37 +2,35 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    // google
+    // Google
     googleId: {
       type: String,
-      required: false,
-      unique: true,
+      sparse: true,
+      default: null,
     },
     name: {
       type: String,
-      required: false,
     },
 
-    // manual
+    // Manual
     email: {
       type: String,
-      unique: true,
-      sparse: true,
+      unique: true, // hanya email yang unik
+      required: true, // email wajib diisi pada signup manual dan login Google
     },
     username: {
       type: String,
-      required: true,
-      unique: true,
+      sparse: true, // hanya valid jika ada nilai (untuk pendaftaran manual)
     },
     password: {
       type: String,
-      required: false,
+      sparse: true, // hanya ada pada pendaftaran manual
     },
     isVerified: {
       type: Boolean,
       default: false,
     },
-    verivicationCode: {
+    verificationCode: {
       type: String,
     },
   },

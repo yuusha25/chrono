@@ -1,24 +1,26 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
-import User from "../models/User.js"; // Import model User
-import { sendVerificationEmail } from "../utils/emailService.js"; // Fungsi kirim email di file terpisah
+import User from "../models/User.js";
+import { sendVerificationEmail } from "../utils/emailService.js";
 import {
   validateSignupData,
   validateVerificationData,
-} from "../utils/validators.js"; // Validasi data input
+  validateSigninData,
+} from "../utils/validators.js";
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
 
 // Fungsi untuk menghasilkan kode verifikasi unik
 function generateVerificationCode() {
-  return crypto.randomBytes(20).toString("hex");
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Rute untuk signup manual
+// signup
 router.post("/signup", async (req, res) => {
+  // console.log("Signup route hit");
   const { username, email, password } = req.body;
+  // console.log("Received data:", { username, email, password });
 
   // Validasi data input
   const validationErrors = validateSignupData(username, email, password);
@@ -40,11 +42,11 @@ router.post("/signup", async (req, res) => {
 
     // Hash password pengguna
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    console.log("Hashed password generated");
 
     // Buat kode verifikasi
     const verificationCode = generateVerificationCode();
 
-    // Simpan user baru di database dengan status belum terverifikasi
     const newUser = new User({
       username,
       email,
@@ -60,13 +62,16 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({
       message: "Akun berhasil dibuat. Cek email Anda untuk verifikasi.",
     });
+
+    console.log("New user saved to database");
+    // return res.redirect("/");
   } catch (err) {
     console.error("Error during signup:", err);
     res.status(500).json({ message: "Terjadi kesalahan server." });
   }
 });
 
-// Rute untuk verifikasi email
+//verivikasi
 router.post("/verify-email", async (req, res) => {
   const { email, verificationCode } = req.body;
 
@@ -98,4 +103,42 @@ router.post("/verify-email", async (req, res) => {
   }
 });
 
+//signin
+router.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validasi data input
+  const validationErrors = validateSigninData(email, password);
+  if (validationErrors.length > 0) {
+    return res.status(400).json({ errors: validationErrors });
+  }
+
+  try {
+    // Cari user berdasarkan email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Email atau password salah." });
+    }
+
+    // Periksa apakah pengguna sudah terverifikasi
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Akun belum diverifikasi." });
+    }
+
+    // Periksa apakah password cocok
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Email atau password salah." });
+    }
+
+    // Kirim respons sukses, bisa juga menambahkan sesi atau token jika diperlukan
+    res.status(200).json({
+      message: "Login berhasil",
+      user: { id: user._id, email: user.email },
+    });
+  } catch (err) {
+    console.error("Error during signin:", err);
+    res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+});
 export default router;

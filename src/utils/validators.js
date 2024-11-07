@@ -14,3 +14,11 @@ export function validateVerificationData(email, verificationCode) {
   if (!verificationCode) errors.push("Kode verifikasi tidak boleh kosong.");
   return errors;
 }
+
+export function validateSigninData(email, password) {
+  const errors = [];
+  if (!email || !email.includes("@")) errors.push("Email tidak valid.");
+  if (!password || password.length < 6)
+    errors.push("Password harus minimal 6 karakter.");
+  return errors;
+}

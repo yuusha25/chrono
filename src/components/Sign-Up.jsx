@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -33,7 +35,7 @@ const SignUp = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Signup success:", data);
-        // Redirect or show success message
+        navigate(`/verify-email?email=${formData.email}`);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
