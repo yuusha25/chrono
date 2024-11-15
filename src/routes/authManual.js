@@ -131,14 +131,31 @@ router.post("/signin", async (req, res) => {
       return res.status(400).json({ message: "Email atau password salah." });
     }
 
-    // Kirim respons sukses, bisa juga menambahkan sesi atau token jika diperlukan
+    // Kirim respons sukses beserta username
     res.status(200).json({
       message: "Login berhasil",
-      user: { id: user._id, email: user.email },
+      user: { id: user._id, email: user.email, username: user.username }, // Tambahkan username
     });
   } catch (err) {
     console.error("Error during signin:", err);
     res.status(500).json({ message: "Terjadi kesalahan server." });
   }
 });
+
+
+// logout
+router.post("/logout", (req, res) => {
+  // Hapus sesi pengguna
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error during logout:", err);
+      return res.status(500).json({ message: "Terjadi kesalahan saat logout." });
+    }
+    
+    res.clearCookie("connect.sid"); // Hapus cookie session
+    return res.status(200).json({ message: "Logout berhasil." });
+  });
+});
+
+
 export default router;

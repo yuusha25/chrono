@@ -7,6 +7,8 @@ import cors from "cors";
 import setupAuthRoutes from "./src/routes/authGoogle.js";
 import manualAuthRoutes from "./src/routes/authManual.js";
 import userRoutes from "./src/routes/userRoutes.js";
+import imageRoutes from './src/routes/imageRoutes.js';
+import upload from './src/uploads/image.js';
 
 dotenv.config();
 
@@ -27,13 +29,15 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
 // Middleware untuk parsing JSON
-app.use(express.json());
+app.use(express.json({ limit: '1gb' }));
 
+// Setup session
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -52,7 +56,13 @@ setupAuthRoutes(app);
 // Rute manual auth
 app.use("/auth", manualAuthRoutes);
 
+// Rute untuk API pengguna
 app.use("/api", userRoutes);
+
+// Rute untuk upload gambar
+app.use("/upload", upload);
+
+app.use("/images", imageRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

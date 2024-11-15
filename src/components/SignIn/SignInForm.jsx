@@ -23,6 +23,8 @@ const SignIn = () => {
 
       const data = await response.json();
       if (response.ok) {
+        // Simpan username ke localStorage
+        localStorage.setItem("username", data.user.username);
         navigate("/");
       } else {
         setError(data.message);
