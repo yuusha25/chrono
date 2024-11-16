@@ -27,7 +27,7 @@ const routes = [
   {
     path: "/verify-email",
     element: <VerifyEmail/>,
-  }
+  },
   {
     path: "*",
     element: <ErrorPage />,
