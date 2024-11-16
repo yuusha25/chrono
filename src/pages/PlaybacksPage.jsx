@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import Playbacks from "../components/Playbacks";
+import Playbacks from "../components/PlayBack/PlayBack";
 import Footer from "../components/Footer";
 
 const PlaybacksPage = () => (

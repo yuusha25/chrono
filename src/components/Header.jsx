@@ -58,19 +58,29 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 px-5 py-5 lg:px-[65px] flex justify-between items-center transition-all duration-300 font-poppins ${
-        isScrolled ? "bg-[#e0f5ff96] rounded-lg mt-5 mx-5 lg:mx-10 shadow-md" : "bg-[#e0f5ff]"
+        isScrolled
+          ? "bg-[#e0f5ff96] rounded-lg mt-5 mx-5 lg:mx-10 shadow-md"
+          : "bg-[#e0f5ff]"
       }`}
       style={{ zIndex: 10 }}
     >
       <div className="flex items-center space-x-8">
-        <img src="./src/assets/logo-fix.svg" alt="logo" className="h-10 lg:h-12 w-auto max-w-[240px]" />
+        <img
+          src="./src/assets/logo-fix.svg"
+          alt="logo"
+          className="h-10 lg:h-12 w-auto max-w-[240px]"
+        />
       </div>
 
+      {/* Desktop Menu */}
       <nav className="hidden lg:flex items-center space-x-8">
         <Link to="/" className="text-[#365486] font-black hover:text-[]">
           Home
         </Link>
-        <Link to="/playbacks" className="text-[#365486] font-medium hover:text-[]">
+        <Link
+          to="/playbacks"
+          className="text-[#365486] font-medium hover:text-[]"
+        >
           Playback
         </Link>
 
@@ -79,8 +89,13 @@ const Header = () => {
         {username ? (
           <div className="flex">
             <button type="button" onClick={toggleDropdown}>
-              <span className="text-[#365486] font-medium flex item-center">
-                <img src="src/assets/account.svg" width="16px" className="mr-1" alt="Account Icon" />
+              <span className="text-[#365486] font-medium flex items-center">
+                <img
+                  src="src/assets/account.svg"
+                  width="16px"
+                  className="mr-1"
+                  alt="Account Icon"
+                />
                 {username}
               </span>
             </button>
@@ -88,7 +103,9 @@ const Header = () => {
             {isDropdownOpen && (
               <div className="absolute right-0 mt-7 w-32 bg-[#e0f5ff] border border-gray-200 rounded shadow-lg">
                 <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  <Link to="/profil" className="text-[#365486] font-medium">Profil</Link>
+                  <Link to="/profil" className="text-[#365486] font-medium">
+                    Profil
+                  </Link>
                 </button>
                 <button
                   className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -101,24 +118,42 @@ const Header = () => {
           </div>
         ) : (
           <button className="px-[18px] py-2 bg-[#365486] rounded-[10px] flex items-center hover:bg-[#2a4675]">
-            <Link to="/SignUp" className="text-white font-medium">Sign up</Link>
+            <Link to="/SignUp" className="text-white font-medium">
+              Sign up
+            </Link>
           </button>
         )}
       </nav>
 
-      {isMenuOpen && (
-        <div className="absolute top-16 right-5 bg-[#d7f1ff] rounded-lg p-7 flex flex-col space-y-4 lg:hidden shadow-lg">
-          <Link to="/" className="text-[#365486] font-black hover:text-[]">Home</Link>
-          <Link to="/playbacks" className="text-[#365486] font-medium hover:text-[]">Playback</Link>
-          {username ? (
-            <span className="text-[#365486] font-medium">{username}</span>
-          ) : (
-            <button className="px-4 py-2 bg-[#365486] rounded-md mt-2">
-              <Link to="/Sign-Up" className="text-white font-medium">Sign up</Link>
-            </button>
-          )}
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <div className="lg:hidden">
+        <button onClick={toggleMenu} className="text-[#365486]">
+          {isMenuOpen ? "Close" : "Menu"}
+        </button>
+
+        {isMenuOpen && (
+          <div className="absolute top-16 right-5 bg-[#d7f1ff] rounded-lg p-7 flex flex-col space-y-4 lg:hidden shadow-lg">
+            <Link to="/" className="text-[#365486] font-black hover:text-[]">
+              Home
+            </Link>
+            <Link
+              to="/playbacks"
+              className="text-[#365486] font-medium hover:text-[]"
+            >
+              Playback
+            </Link>
+            {username ? (
+              <span className="text-[#365486] font-medium">{username}</span>
+            ) : (
+              <button className="px-4 py-2 bg-[#365486] rounded-md mt-2">
+                <Link to="/SignUp" className="text-white font-medium">
+                  Sign up
+                </Link>
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </header>
   );
 };
