@@ -102,9 +102,11 @@ const Header = () => {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-7 w-32 bg-[#e0f5ff] border border-gray-200 rounded shadow-lg">
-                <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  <Link to="/profil" className="text-[#365486] font-medium">
-                    Profil
+                <button className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                onClick={() => setDropdownOpen(false)}
+                >
+                  <Link to="/Profile" className="text-[#365486] font-medium">
+                    Profile
                   </Link>
                 </button>
                 <button

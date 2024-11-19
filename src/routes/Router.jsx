@@ -6,6 +6,7 @@ import SignInPage from "../pages/SignInPage";
 import ErrorPage from "../pages/ErrorPage";
 import RouterErrorBoundary from "./RouterErrorBoundary";
 import VerifyEmail from "../components/SignUp/VeryfyEmail";
+import ProfilePage from '../pages/ProfilePage';
 
 const routes = [
   {
@@ -31,6 +32,10 @@ const routes = [
   {
     path: "*",
     element: <ErrorPage />,
+  },
+  {
+    path: '/Profile',
+    element: <ProfilePage />,
   },
 ];
 
