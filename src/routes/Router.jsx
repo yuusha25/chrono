@@ -7,6 +7,7 @@ import ErrorPage from "../pages/ErrorPage";
 import RouterErrorBoundary from "./RouterErrorBoundary";
 import VerifyEmail from "../components/SignUp/VeryfyEmail";
 import ProfilePage from '../pages/ProfilePage';
+import LoginSuccess from "../components/loginsuccess";
 
 const routes = [
   {
@@ -36,6 +37,10 @@ const routes = [
   {
     path: '/Profile',
     element: <ProfilePage />,
+  },
+  {
+    path: '/login-success',
+    element: <LoginSuccess />,
   },
 ];
 

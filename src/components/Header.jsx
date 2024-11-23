@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState("user"); // Default value "user"
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -14,10 +15,11 @@ const Header = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    // Ambil username dari localStorage
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-      setUsername(savedUsername);
+    // Ambil userId dari localStorage
+    const savedUserId = localStorage.getItem("userId");
+    if (savedUserId) {
+      setUserId(savedUserId);
+      fetchUsername(savedUserId);
     }
 
     window.addEventListener("scroll", handleScroll);
@@ -25,6 +27,23 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const fetchUsername = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/auth/api/user/${userId}`); // Ganti endpoint untuk mengambil user berdasarkan ID
+      const data = await response.json();
+      if (data.username) {
+        localStorage.setItem("username", data.username );
+        setUsername(data.username);
+      } else {
+        setUsername("user");
+      }
+    } catch (error) {
+      console.error("Error fetching username:", error);
+      setUsername("user");
+    }
+  };
+  
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -40,9 +59,11 @@ const Header = () => {
       });
 
       if (response.ok) {
-        // Hapus username dari localStorage dan perbarui state
+        // Hapus userId dari localStorage dan perbarui state
+        localStorage.removeItem("userId");
         localStorage.removeItem("username");
-        setUsername(null);
+        setUserId(null);
+        setUsername("user");
 
         // Tutup dropdown dan arahkan ke halaman Home
         setDropdownOpen(false);
@@ -86,7 +107,7 @@ const Header = () => {
 
         <img src="./src/assets/pipe.svg" alt="separator" className="h-6" />
 
-        {username ? (
+        {userId ? (
           <div className="flex">
             <button type="button" onClick={toggleDropdown}>
               <span className="text-[#365486] font-medium flex items-center">
@@ -144,7 +165,7 @@ const Header = () => {
             >
               Playback
             </Link>
-            {username ? (
+            {userId ? (
               <span className="text-[#365486] font-medium">{username}</span>
             ) : (
               <button className="px-4 py-2 bg-[#365486] rounded-md mt-2">

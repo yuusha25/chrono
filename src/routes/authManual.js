@@ -157,5 +157,23 @@ router.post("/logout", (req, res) => {
   });
 });
 
+router.get('/api/user/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId); // Sesuaikan dengan model MongoDB Anda
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Pilih username jika ada, atau gunakan name jika tidak ada username
+    const displayName = user.username;
+
+    return res.json({ username: displayName });
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 export default router;

@@ -20,14 +20,27 @@ passport.use(
 
         if (!user) {
           // User does not exist; create a new user
+
+          // Find the latest username with "user" prefix
+          const lastUser = await User.findOne({ username: /^user\d+$/ })
+            .sort({ username: -1 }) // Sort descending to get the latest
+            .exec();
+
+          // Generate new incremented username
+          let newUsername = "user1"; // Default username if no user exists
+          if (lastUser) {
+            const lastNumber = parseInt(lastUser.username.slice(4)); // Extract the number part
+            newUsername = `user${lastNumber + 1}`; // Increment without leading zeros
+          }
+
           user = await User.create({
             googleId: profile.id,
-            name: profile.displayName, // Assuming you want to save the name
-            email: profile.emails[0].value, // Getting the user's email
+            name: profile.displayName, // Save user's name
+            email: profile.emails[0].value, // Save user's email
             isVerified: true,
+            username: newUsername, // Set the new username
           });
         }
-
         return done(null, user);
       } catch (error) {
         return done(error, null);
@@ -63,13 +76,18 @@ const setupAuthRoutes = (app) => {
       if (err) {
         return next(err);
       }
+
       // User is now created or found, log them in
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
         }
+
         // Redirect to home page after successful login or signup
-        return res.redirect("http://localhost:5173/");
+        return res.redirect(`http://localhost:5173/login-success?id=${user.id}`);
+
+        // return res.redirect(`http://localhost:5173/?id=${user.id}`);
+
       });
     })(req, res, next);
   });
