@@ -1,104 +1,134 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Profile = () => {
-  // State untuk menyimpan data user
   const [userData, setUserData] = useState({
-    username: "razky251", // Default value (bisa dari API)
-    email: "atuamu44@gmail.com", // Default value (bisa dari API)
-    password: "********", // Default value (bisa dari API)
+    username: "",
+    email: "",
+    password: "",
   });
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Handler untuk update data
-  const handleUpdate = (field, value) => {
-    // Proses update (bisa kirim ke API)
-    console.log(`Update ${field}:`, value);
-    setUserData((prev) => ({ ...prev, [field]: value }));
+  const userId = localStorage.getItem("userId");
+
+  // Fetch user data when the component mounts
+  useEffect(() => {
+    if (userId) {
+      fetch(`http://localhost:8080/api/users/${userId}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setUserData({
+            username: data.username || "",
+            email: data.email || "",
+            password: "", // Don't expose the password
+          });
+        })
+        .catch((err) => {
+          console.error("Error fetching user data:", err);
+        });
+    }
+  }, [userId]);
+
+  // Handle username update
+  const handleUpdateUsername = () => {
+    if (newUsername !== userData.username) {
+      if (userId) {
+        fetch(`http://localhost:8080/api/update-username`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, username: newUsername }),
+        })
+          .then((res) => {
+            if (!res.ok) {
+              if (res.status === 409) {
+                throw new Error("Username is already taken");
+              }
+              throw new Error("Failed to update username");
+            }
+            return res.json();
+          })
+          .then((updatedUser) => {
+            setUserData((prev) => ({ ...prev, username: updatedUser.username }));
+            setIsEditingUsername(false);
+            setMessage("Username updated successfully!");
+            setError("");
+          })
+          .catch((err) => {
+            console.error("Error updating username:", err);
+            setError(err.message);
+            setMessage("");
+          });
+      }
+    }
   };
 
   return (
-      <div className="max-w-[1034px] mx-auto py-10">
-        <h1 className="text-[#365486] text-[39px] font-bold text-center mb-10">Your Profile</h1>
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          {/* Gambar dan Form */}
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="flex flex-col items-center">
-              <div className="rounded-full bg-gray-300 w-[178px] h-[171px] flex items-center justify-center">
-                178 x 171
-              </div>
-              <button className="bg-[#1679ab] text-white px-4 py-2 rounded mt-4">Choose File</button>
-            </div>
-            <div className="flex-1 mt-6 md:mt-0 md:ml-10">
-              {/* Username */}
-              <div className="mb-6">
-                <label className="block text-black text-xl font-bold mb-2">Username</label>
+    <div className="max-w-[1034px] mx-auto py-10">
+      <h1 className="text-[#365486] text-[39px] font-bold text-center mb-10">Your Profile</h1>
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="flex flex-col md:flex-row items-center">
+          <div className="flex-1 mt-6 md:mt-0 md:ml-10">
+            <div className="mb-6">
+              <label className="block text-black text-xl font-bold mb-2">Username</label>
+              {isEditingUsername ? (
                 <div className="flex items-center">
                   <input
                     type="text"
-                    value={userData.username}
-                    onChange={(e) =>
-                      setUserData((prev) => ({ ...prev, username: e.target.value }))
-                    }
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
                     className="w-full bg-white border border-black p-2 rounded mr-2"
                   />
                   <button
                     className="bg-[#1679ab] text-white px-4 py-2 rounded"
-                    onClick={() => handleUpdate("username", userData.username)}
+                    onClick={handleUpdateUsername}
                   >
-                    Update
+                    Save
                   </button>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className="mb-6">
-                <label className="block text-black text-xl font-bold mb-2">Email</label>
-                <div className="flex items-center">
-                  <input
-                    type="email"
-                    value={userData.email}
-                    onChange={(e) =>
-                      setUserData((prev) => ({ ...prev, email: e.target.value }))
-                    }
-                    className="w-full bg-white border border-black p-2 rounded mr-2"
-                  />
                   <button
-                    className="bg-[#1679ab] text-white px-4 py-2 rounded"
-                    onClick={() => handleUpdate("email", userData.email)}
+                    className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                    onClick={() => setIsEditingUsername(false)}
                   >
-                    Update
+                    Cancel
                   </button>
                 </div>
-              </div>
-
-              {/* Password */}
-              <div className="mb-6">
-                <label className="block text-black text-xl font-bold mb-2">Password</label>
-                <div className="flex items-center">
-                  <input
-                    type="password"
-                    value={userData.password}
-                    onChange={(e) =>
-                      setUserData((prev) => ({ ...prev, password: e.target.value }))
-                    }
-                    className="w-full bg-white border border-black p-2 rounded mr-2"
-                  />
+              ) : (
+                <div className="text-black text-lg flex items-center">
+                  <span>{userData.username}</span>
                   <button
-                    className="bg-[#1679ab] text-white px-4 py-2 rounded"
-                    onClick={() => handleUpdate("password", userData.password)}
+                    className="bg-[#1679ab] text-white px-4 py-2 rounded ml-4"
+                    onClick={() => {
+                      setIsEditingUsername(true);
+                      setNewUsername(userData.username);
+                    }}
                   >
-                    Update
+                    Edit
                   </button>
                 </div>
-              </div>
-
-              <div className="text-black text-xl font-bold">
-                Total files upload: <span className="font-normal">30</span>
-              </div>
+              )}
             </div>
+
+            {/* Email */}
+            <div className="mb-6">
+              <label className="block text-black text-xl font-bold mb-2">Email</label>
+              <div className="text-black text-lg">{userData.email}</div>
+            </div>
+
+            {/* Feedback Messages */}
+            {message && <p className="text-green-500">{message}</p>}
+            {error && <p className="text-red-500">{error}</p>}
           </div>
         </div>
       </div>
-    
+    </div>
   );
 };
 

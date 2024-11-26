@@ -23,8 +23,8 @@ const UploadForm = () => {
     e.preventDefault();
 
     // Ambil username dari local storage
-    const username = localStorage.getItem("username");
-    if (!username) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
       alert("Username tidak ditemukan. Silakan login ulang.");
       return;
     }
@@ -51,7 +51,7 @@ const UploadForm = () => {
     selectedFiles.forEach((file) => {
       formData.append("foto", file); // Menambahkan setiap file ke FormData
     });
-    formData.append("username", username);
+    formData.append("userId", userId);
     formData.append("date", formattedDate);
     formData.append("time", formattedTime);
 

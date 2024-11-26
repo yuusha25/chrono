@@ -24,7 +24,7 @@ export const uploadMedia = async (req, res) => {
       // Simpan informasi file ke database
       const newFile = new File({
         url: datafile.url,
-        username: req.body.username,
+        userId: req.body.userId,
         date: req.body.date,
         time: req.body.time,
       });

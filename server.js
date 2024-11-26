@@ -9,6 +9,7 @@ import manualAuthRoutes from "./src/routes/authManual.js";
 import userRoutes from "./src/routes/userRoutes.js";
 import imageRoutes from './src/routes/imageRoutes.js';
 import upload from './src/uploads/image.js';
+// import updateProfile from './src/uploads/updateProfile.js';
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -63,6 +64,8 @@ app.use("/api", userRoutes);
 app.use("/upload", upload);
 
 app.use("/images", imageRoutes);
+
+// app.use("/user", userRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

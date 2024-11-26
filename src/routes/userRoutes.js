@@ -26,4 +26,37 @@ router.get("/users/:id", async (req, res) => {
   }
 });
 
+
+
+// Update username
+router.put("/update-username", async (req, res) => {
+  const { userId, username } = req.body;
+
+  if (!userId || !username) {
+    return res.status(400).json({ message: "User ID and username are required" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update username
+    user.username = username;
+    await user.save();
+
+    res.status(200).json({ username: user.username });
+  } catch (error) {
+    if (error.code === 11000) {
+      // Handle duplicate username error
+      return res.status(409).json({ message: "Username is already taken" });
+    }
+    console.error("Error updating username:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 export default router;

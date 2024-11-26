@@ -30,7 +30,7 @@ const Header = () => {
 
   const fetchUsername = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/auth/api/user/${userId}`); // Ganti endpoint untuk mengambil user berdasarkan ID
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`); // Ganti endpoint untuk mengambil user berdasarkan ID
       const data = await response.json();
       if (data.username) {
         localStorage.setItem("username", data.username );
