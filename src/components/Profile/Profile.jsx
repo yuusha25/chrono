@@ -127,41 +127,6 @@ const Profil = () => {
     }
   };
 
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-  };
-
-  const saveChanges = async () => {
-    try {
-      const response = await fetch(`/api/users/${userData._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: editFields.username,
-          password: editFields.password,
-        }),
-      });
-
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setUserData(updatedUser.user);
-        closeEditModal();
-        setIsUpdated(true);
-        setTimeout(() => {
-          setIsUpdated(false);
-        }, 3000);
-      } else {
-        console.error("Error updating user:", response.status);
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-
-  const formattedPassword = userData.password.replace(/./g, "*");
-
   return (
     <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
