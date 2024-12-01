@@ -9,10 +9,10 @@ const dateFormat = (date) => {
 };
 
 router.get("/user-images", async (req, res) => {
-  const { iduser, date, starttime, endtime } = req.query;
+  const { userId, date, starttime, endtime } = req.query;
 
   try {
-    const query = { iduser };
+    const query = { userId };
 
     if (date) {
       const formattedDate = dateFormat(date);

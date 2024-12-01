@@ -12,9 +12,9 @@ const Playback = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
 
-  const username = localStorage.getItem("username");
+  const userId = localStorage.getItem("userId");
 
-  const { images, error } = useFetchImages(username, filters);
+  const { images, error } = useFetchImages(userId, filters);
 
   const handleSubmit = (e) => {
     e.preventDefault();

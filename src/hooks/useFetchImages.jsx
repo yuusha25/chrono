@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
-export const useFetchImages = (username, filters) => {
+export const useFetchImages = (userId, filters) => {
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchImages = async () => {
-      if (!username) {
+      if (!userId) {
         console.log("No username provided. Skipping fetch.");
         return;
       }
 
       try {
         console.log("Fetching images with filters:", filters);
-        const params = new URLSearchParams({ username, ...filters }).toString();
+        const params = new URLSearchParams({ userId, ...filters }).toString();
         const response = await fetch(
           `http://localhost:8080/images/user-images?${params}`
         );
@@ -32,7 +32,7 @@ export const useFetchImages = (username, filters) => {
     };
 
     fetchImages();
-  }, [username, filters]);
+  }, [userId, filters]);
 
   return { images, error };
 };
