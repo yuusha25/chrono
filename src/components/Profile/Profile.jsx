@@ -1,61 +1,130 @@
 import React, { useState, useEffect } from "react";
+import UsernameSection from "./UserUsername";
+import EmailSection from "./UserEmail";
+import PasswordSection from "./UserPassword";
 
-const Profile = () => {
+const Profil = () => {
+  // User data state
   const [userData, setUserData] = useState({
     username: "",
     email: "",
-    password: "",
+    password: null,
   });
 
-  const [profileImage, setProfileImage] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
-  const [editFields, setEditFields] = useState({
-    username: "",
-    password: "",
+  // Username editing states
+  const [usernameState, setUsernameState] = useState({
+    isEditing: false,
+    newUsername: "",
+    message: "",
+    error: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
 
+  // Password editing states
+  const [passwordState, setPasswordState] = useState({
+    currentPassword: "",
+    newPassword: "",
+    message: "",
+    error: "",
+  });
+
+  // Get user ID from local storage
+  const userId = localStorage.getItem("userId");
+
+  // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!userId) return;
+
       try {
-        const response = await fetch("/api/users/me");
-        if (response.ok) {
-          const user = await response.json();
-          setUserData(user);
-          setEditFields({
-            username: user.username,
-            password: user.password,
-          });
-        } else {
-          console.error("Error fetching user data:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+        const response = await fetch(
+          `http://localhost:8080/api/users/${userId}`
+        );
+        const data = await response.json();
+        setUserData({
+          username: data.username || "",
+          email: data.email || "",
+          password: data.password || null,
+        });
+      } catch (err) {
+        console.error("Error fetching user data:", err);
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
 
-  // Fungsi untuk menangani upload gambar
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+  // Username update handler
+  const handleUpdateUsername = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/update-username",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            username: usernameState.newUsername,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update username");
+      }
+
+      const updatedUser = await response.json();
+      setUserData((prev) => ({ ...prev, username: updatedUser.username }));
+      setUsernameState((prev) => ({
+        ...prev,
+        message: "Username updated successfully!",
+        error: "",
+        isEditing: false,
+      }));
+    } catch (err) {
+      setUsernameState((prev) => ({
+        ...prev,
+        error: err.message,
+        message: "",
+      }));
     }
   };
 
-  const openEditModal = () => {
-    setEditFields({
-      username: userData.username,
-      password: userData.password,
-    });
-    setIsEditModalOpen(true);
+  // Password update handler
+  const handleUpdatePassword = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/update-password",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            currentPassword: passwordState.currentPassword,
+            newPassword: passwordState.newPassword,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Current password is incorrect");
+        }
+        throw new Error("Failed to update password");
+      }
+
+      setPasswordState({
+        currentPassword: "",
+        newPassword: "",
+        message: "Password updated successfully!",
+        error: "",
+      });
+    } catch (err) {
+      setPasswordState((prev) => ({
+        ...prev,
+        error: err.message,
+        message: "",
+      }));
+    }
   };
 
   const closeEditModal = () => {
@@ -65,16 +134,16 @@ const Profile = () => {
   const saveChanges = async () => {
     try {
       const response = await fetch(`/api/users/${userData._id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: editFields.username,
           password: editFields.password,
         }),
       });
-  
+
       if (response.ok) {
         const updatedUser = await response.json();
         setUserData(updatedUser.user);
@@ -84,161 +153,41 @@ const Profile = () => {
           setIsUpdated(false);
         }, 3000);
       } else {
-        console.error('Error updating user:', response.status);
+        console.error("Error updating user:", response.status);
       }
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   };
 
   const formattedPassword = userData.password.replace(/./g, "*");
 
   return (
-    <div className="max-w-[1034px] mx-auto py-10">
-      <h1 className="text-[#365486] text-[39px] font-bold text-center mb-10">
-        Your Profile
-      </h1>
+    <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl text-[#365486] font-bold text-center mb-8">
+          Your Profile
+        </h1>
 
-      {/* Konten Utama */}
-      <div className="bg-white shadow-lg rounded-lg p-6 relative">
-        <div className="flex flex-col md:flex-row items-center">
-          {/* Gambar Profil */}
-          <div className="flex flex-col items-center">
-            <div className="rounded-full bg-gray-300 w-[178px] h-[171px] flex items-center justify-center overflow-hidden">
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                "178 x 171"
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput"
-              className="bg-[#1679ab] text-white px-4 py-2 rounded mt-4 cursor-pointer"
-            >
-              Choose File
-            </label>
-          </div>
+        <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 md:p-8">
+          <UsernameSection
+            userData={userData}
+            usernameState={usernameState}
+            setUsernameState={setUsernameState}
+            handleUpdateUsername={handleUpdateUsername}
+          />
 
-          {/* Informasi Profil */}
-          <div className="flex-1 mt-6 md:mt-0 md:ml-10">
-            <div className="mb-6">
-              <label className="block text-black text-xl font-bold mb-2">
-                Username
-              </label>
-              <span>{userData.username}</span>
-            </div>
+          <EmailSection email={userData.email} />
 
-            <div className="mb-6">
-              <label className="block text-black text-xl font-bold mb-2">
-                Email
-              </label>
-              <span>{userData.email}</span>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-black text-xl font-bold mb-2">
-                Password
-              </label>
-              <span>{formattedPassword}</span>
-            </div>
-          </div>
+          <PasswordSection
+            passwordState={passwordState}
+            setPasswordState={setPasswordState}
+            handleUpdatePassword={handleUpdatePassword}
+          />
         </div>
       </div>
-
-      {/* Tombol Edit di luar konten utama */}
-      <div className="text-right mt-4">
-        <button
-          className="bg-[#1679ab] text-white px-6 py-2 rounded"
-          onClick={openEditModal}
-        >
-          Edit
-        </button>
-      </div>
-
-      {/* Modal Popup */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-[400px]">
-            <h2 className="text-[#365486] text-[24px] font-bold mb-4">
-              Edit Profile
-            </h2>
-
-            <div className="mb-4">
-              <label className="block text-black text-lg font-bold mb-2">
-                Username
-              </label>
-              <input
-                type="text"
-                value={editFields.username}
-                onChange={(e) =>
-                  setEditFields((prev) => ({ ...prev, username: e.target.value }))
-                }
-                className="w-full border border-gray-300 p-2 rounded"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-black text-lg font-bold mb-2">
-                Password
-              </label>
-              <div className="flex items-center">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={editFields.password}
-                  onChange={(e) =>
-                    setEditFields((prev) => ({
-                      ...prev,
-                      password: e.target.value,
-                    }))
-                  }
-                  className="w-full border border-gray-300 p-2 rounded"
-                />
-                <button
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="ml-2 bg-gray-300 px-3 py-2 rounded"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={closeEditModal}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={saveChanges}
-                className="bg-[#1679ab] text-white px-4 py-2 rounded"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Pop-up Konfirmasi */}
-      {isUpdated && (
-        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded shadow-lg">
-          Data has been updated successfully!
-        </div>
-      )}
     </div>
   );
 };
 
-export default Profile;
+export default Profil;
