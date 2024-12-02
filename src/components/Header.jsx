@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import menu from "../assets/menu.svg";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -8,14 +9,15 @@ const Header = () => {
   const [username, setUsername] = useState("user"); // Default value "user"
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Added to track current location
 
   useEffect(() => {
-    // Handle efek scroll
+    // Handle scroll effect
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    // Ambil userId dari localStorage
+    // Get userId from localStorage
     const savedUserId = localStorage.getItem("userId");
     if (savedUserId) {
       setUserId(savedUserId);
@@ -30,7 +32,7 @@ const Header = () => {
 
   const fetchUsername = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${userId}`); // Ganti endpoint untuk mengambil user berdasarkan ID
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`);
       const data = await response.json();
       if (data.username) {
         localStorage.setItem("username", data.username);
@@ -58,21 +60,28 @@ const Header = () => {
       });
 
       if (response.ok) {
-        // Hapus userId dari localStorage dan perbarui state
+        // Remove userId from localStorage and update state
         localStorage.removeItem("userId");
         localStorage.removeItem("username");
         setUserId(null);
         setUsername("user");
 
-        // Tutup dropdown dan arahkan ke halaman Home
+        // Close dropdown and redirect to Home
         setDropdownOpen(false);
         navigate("/");
       } else {
-        console.error("Logout gagal");
+        console.error("Logout failed");
       }
     } catch (error) {
-      console.error("Error saat logout:", error);
+      console.error("Error during logout:", error);
     }
+  };
+
+  // Function to determine active link style
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? "text-[#365486] font-black "
+      : "text-[#365486] font-medium hover:underline";
   };
 
   return (
@@ -94,13 +103,10 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <nav className="hidden lg:flex items-center space-x-8">
-        <Link to="/" className="text-[#365486] font-black hover:text-[]">
+        <Link to="/" className={getLinkClass("/")}>
           Home
         </Link>
-        <Link
-          to="/playbacks"
-          className="text-[#365486] font-medium hover:text-[]"
-        >
+        <Link to="/playbacks" className={getLinkClass("/playbacks")}>
           Playback
         </Link>
 
@@ -122,14 +128,13 @@ const Header = () => {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-7 w-32 bg-[#e0f5ff] border border-gray-200 rounded shadow-lg">
-                <button
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                <Link
+                  to="/Profile"
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  <Link to="/Profile" className="text-[#365486] font-medium">
-                    Profile
-                  </Link>
-                </button>
+                  Profile
+                </Link>
                 <button
                   className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                   onClick={handleLogout}
@@ -149,24 +154,38 @@ const Header = () => {
       </nav>
 
       {/* Mobile Menu */}
-      <div className="lg:hidden">
-        <button onClick={toggleMenu} className="text-[#365486]">
-          {isMenuOpen ? "Close" : "Menu"}
+      <div className="lg:hidden flex justify-end">
+        <button
+          onClick={toggleMenu}
+          className="text-[#365486] flex items-center justify-center"
+        >
+          <img src={menu} alt="Menu" className="w-8 h-8 object-contain" />
         </button>
 
         {isMenuOpen && (
           <div className="absolute top-16 right-5 bg-[#d7f1ff] rounded-lg p-7 flex flex-col space-y-4 lg:hidden shadow-lg">
-            <Link to="/" className="text-[#365486] font-black hover:text-[]">
+            <Link to="/" className={getLinkClass("/")}>
               Home
             </Link>
-            <Link
-              to="/playbacks"
-              className="text-[#365486] font-medium hover:text-[]"
-            >
+            <Link to="/playbacks" className={getLinkClass("/playbacks")}>
               Playback
             </Link>
             {userId ? (
-              <span className="text-[#365486] font-medium">{username}</span>
+              <>
+                <Link
+                  to="/Profile"
+                  className={`${getLinkClass("/Profile")} block`}
+                  onClick={toggleMenu} // Close menu when navigating
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-left text-[#365486] font-medium"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <button className="px-4 py-2 bg-[#365486] rounded-md mt-2">
                 <Link to="/SignUp" className="text-white font-medium">

@@ -10,7 +10,7 @@ const UserUsername = ({
     <>
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between">
         <label className="text-black text-lg sm:text-xl font-bold mb-2 sm:mb-0 sm:w-1/4">
-          Username
+          Username :
         </label>
 
         {usernameState.isEditing ? (
@@ -49,7 +49,7 @@ const UserUsername = ({
         ) : (
           <div className="flex items-center w-full sm:w-3/4 justify-between">
             <span className="text-black text-base sm:text-lg flex-grow">
-              : {userData.username}
+              {userData.username}
             </span>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded"
