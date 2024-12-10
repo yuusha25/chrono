@@ -7,7 +7,7 @@ const ImageDisplay = ({ images, error, viewMode, onImageClick }) => {
     <div className="w-full max-w-7xl bg-[#f0faff] rounded-lg shadow-md mb-8">
       {/* List View */}
       {viewMode === "list" && (
-        <div className="w-full overflow-x-auto">
+        <div className="w-full h-[530px] overflow-y overflow-x-auto">
           <table className="w-full min-w-[600px] border-collapse">
             <thead className="bg-[#365486] text-white sticky top-0 z-10">
               <tr>
