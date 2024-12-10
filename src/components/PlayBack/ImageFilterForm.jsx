@@ -33,7 +33,7 @@ const ImageFilterForm = ({ onSubmit }) => {
           name="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="rounded-md px-1 py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
+          className="rounded-md px-1 text-sm md:text-base py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
         />
       </div>
 
@@ -50,7 +50,7 @@ const ImageFilterForm = ({ onSubmit }) => {
           name="timeStart"
           value={timeStart}
           onChange={(e) => setTimeStart(e.target.value)}
-          className="rounded-md px-2 py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
+          className="rounded-md text-sm md:text-base px-2 py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
         />
       </div>
 
@@ -67,7 +67,7 @@ const ImageFilterForm = ({ onSubmit }) => {
           name="timeEnd"
           value={timeEnd}
           onChange={(e) => setTimeEnd(e.target.value)}
-          className="rounded-md px-2 py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
+          className="rounded-md px-2 text-sm md:text-base py-2 border border-black shadow-sm focus:ring-blue-500 focus:border-blue-500 flex-grow"
         />
       </div>
 
