@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import Gmail from "../../assets/Gmail.png";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -93,7 +93,7 @@ const SignIn = () => {
             className="mt-4 inline-flex items-center justify-center w-full p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-base font-normal transition duration-200"
           >
             <img
-              src="./src/assets/Gmail.png"
+              src={Gmail}
               alt="Google logo"
               className="w-6 h-6 mr-2"
             />

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import menu from "../assets/menu.png";
-
+import logo from "../assets/logo-fix.png";
+import pipe from "../assets/pipe.png";
+import account from "../assets/account.png";
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,11 +96,7 @@ const Header = () => {
       style={{ zIndex: 10 }}
     >
       <div className="flex items-center space-x-8">
-        <img
-          src="./src/assets/logo-fix.png"
-          alt="logo"
-          className="h-10 lg:h-12 w-auto max-w-[240px]"
-        />
+        <img src={logo} alt="logo" className="h-10 lg:h-12 w-auto max-w-[240px]"/>
       </div>
 
       {/* Desktop Menu */}
@@ -110,14 +108,14 @@ const Header = () => {
           Playback
         </Link>
 
-        <img src="./src/assets/pipe.png" alt="separator" className="h-6" />
+        <img src={pipe} alt="separator" className="h-6" />
 
         {userId ? (
           <div className="flex">
             <button type="button" onClick={toggleDropdown}>
               <span className="text-[#365486] font-medium flex items-center">
                 <img
-                  src="src/assets/account.png"
+                  src={account}
                   width="16px"
                   className="mr-1"
                   alt="Account Icon"

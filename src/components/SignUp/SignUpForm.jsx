@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Gmail from "../../assets/Gmail.png";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -119,7 +120,7 @@ const SignUp = () => {
             className="mt-4 flex items-center justify-center w-full py-2 bg-gray-100 rounded text-gray-600 hover:bg-gray-200 transition duration-200"
           >
             <img
-              src="./src/assets/Gmail.png"
+              src={Gmail}
               alt="Google logo"
               className="w-5 h-5 mr-2"
             />
