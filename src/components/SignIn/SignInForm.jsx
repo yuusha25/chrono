@@ -93,7 +93,7 @@ const SignIn = () => {
             className="mt-4 inline-flex items-center justify-center w-full p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md text-base font-normal transition duration-200"
           >
             <img
-              src="./src/assets/Gmail.svg"
+              src="./src/assets/Gmail.png"
               alt="Google logo"
               className="w-6 h-6 mr-2"
             />

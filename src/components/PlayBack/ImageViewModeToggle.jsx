@@ -9,7 +9,7 @@ const ImageViewModeToggle = ({ viewMode, onViewModeChange }) => {
           viewMode === "list" ? "bg-[#2a4675]" : "bg-[#e0e0e0]"
         }`}
       >
-        <img src="./src/assets/list.svg" alt="List View" width="30" />
+        <img src="./src/assets/list.png" alt="List View" width="30" />
       </button>
       <button
         onClick={() => onViewModeChange("grid")}
@@ -17,7 +17,7 @@ const ImageViewModeToggle = ({ viewMode, onViewModeChange }) => {
           viewMode === "grid" ? "bg-[#2a4675]" : "bg-[#e0e0e0]"
         }`}
       >
-        <img src="./src/assets/grid.svg" alt="Grid View" width="30" />
+        <img src="./src/assets/grid.png" alt="Grid View" width="30" />
       </button>
     </div>
   );
