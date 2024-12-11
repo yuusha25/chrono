@@ -27,7 +27,10 @@ const app = express();
 // Middleware CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://choronocam.vercel.app"
+        : "http://localhost:5173",
     methods: ["GET", "POST", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -43,7 +46,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production", // Use secure in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
   })
 );
 
@@ -65,6 +72,14 @@ app.use("/upload", upload);
 app.use("/images", imageRoutes);
 
 // app.use("/user", userRoutes);
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "An unexpected error occurred",
+    error: process.env.NODE_ENV === "development" ? err.message : {},
+  });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
