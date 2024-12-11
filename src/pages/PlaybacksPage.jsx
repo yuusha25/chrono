@@ -33,26 +33,26 @@ const PlaybacksPage = () => {
   return (
     <div className="font-poppins">
       <Header />
-      <main className="mt-[120px]">
-        <div className="bg-[#f8fbff] font-poppins min-h-screen flex flex-col items-center py-4 sm:py-8 px-4 sm:px-6">
+      <main className="bg-[#f8fbff] font-poppins min-h-screen flex flex-col items-center py-4 sm:py-8 px-4 sm:px-6">
+        <div className="mt-[50px] md:mt-[100px]">
           <ImageFilterForm onSubmit={handleFilterSubmit} />
-
-          <ImageViewModeToggle
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
-
-          <ImageDisplay
-            images={images}
-            error={error}
-            viewMode={viewMode}
-            onImageClick={openModal}
-          />
-
-          {isModalOpen && activeImage && (
-            <ImageModal image={activeImage} closeModal={closeModal} />
-          )}
         </div>
+
+        <ImageViewModeToggle
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        <ImageDisplay
+          images={images}
+          error={error}
+          viewMode={viewMode}
+          onImageClick={openModal}
+        />
+
+        {isModalOpen && activeImage && (
+          <ImageModal image={activeImage} closeModal={closeModal} />
+        )}
       </main>
       <Footer />
     </div>

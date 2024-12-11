@@ -4,16 +4,13 @@ import ImageUploadStats from "./ImageUploadStats";
 
 const ImageDisplay = ({ images, error, viewMode, onImageClick }) => {
   return (
-    <div className="w-full max-w-7xl bg-[#f0faff] rounded-lg shadow-md mb-8">
-      {/* Statistics View */}
+    <div className="w-full max-w-7xl xl:max-w-[1800px] bg-[#f0faff] rounded-lg shadow-md mb-8">
       {viewMode === "list" && <ImageUploadStats images={images} />}
 
-      {/* Grid View */}
       {viewMode === "grid" && (
-        <div className="p-4">
-          {/* Error and Empty State Handling */}
+        <div className="p-4 bg-purple-30 h-[610px] overflow-y-auto ">
           {error && (
-            <div className="text-center text-red-500 p-4 bg-red-50 rounded-lg">
+            <div className="text-center text-red-500 p-4 bg-red-50 rounded-lg mb-4">
               Error: {error}
             </div>
           )}
@@ -24,7 +21,6 @@ const ImageDisplay = ({ images, error, viewMode, onImageClick }) => {
             </div>
           )}
 
-          {/* Grid Layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {images.map((image, index) => (
               <div
