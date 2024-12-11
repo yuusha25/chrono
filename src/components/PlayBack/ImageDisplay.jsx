@@ -4,11 +4,11 @@ import ImageUploadStats from "./ImageUploadStats";
 
 const ImageDisplay = ({ images, error, viewMode, onImageClick }) => {
   return (
-    <div className="w-full max-w-7xl xl:max-w-[1800px] bg-[#f0faff] rounded-lg shadow-md mb-8">
-      {viewMode === "list" && <ImageUploadStats images={images} />}
+    <div className="w-full max-w-5xl lg:max-w-7xl bg-[#f0faff] rounded-lg shadow-md mb-8">
+      {viewMode === "event" && <ImageUploadStats images={images} />}
 
       {viewMode === "grid" && (
-        <div className="p-4 bg-purple-30 h-[610px] overflow-y-auto ">
+        <div className="p-4 border rounded-md h-[610px] overflow-y-auto ">
           {error && (
             <div className="text-center text-red-500 p-4 bg-red-50 rounded-lg mb-4">
               Error: {error}

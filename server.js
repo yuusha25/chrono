@@ -7,9 +7,8 @@ import cors from "cors";
 import setupAuthRoutes from "./src/routes/authGoogle.js";
 import manualAuthRoutes from "./src/routes/authManual.js";
 import userRoutes from "./src/routes/userRoutes.js";
-import imageRoutes from './src/routes/imageRoutes.js';
-import upload from './src/uploads/image.js';
-// import updateProfile from './src/uploads/updateProfile.js';
+import imageRoutes from "./src/routes/imageRoutes.js";
+import upload from "./src/uploads/image.js";
 
 dotenv.config();
 
@@ -36,7 +35,7 @@ app.use(
 );
 
 // Middleware untuk parsing JSON
-app.use(express.json({ limit: '1gb' }));
+app.use(express.json({ limit: "1gb" }));
 
 // Setup session
 app.use(

@@ -20,10 +20,8 @@ const ImageUploadStats = ({ images }) => {
 
   // Process images and apply filters
   const processImageData = (images) => {
-    // Create base 24-hour data
     const hourlyData = generate24HourData();
 
-    // Filter and count uploads
     images.forEach((image) => {
       if (image.time) {
         const hour = image.time.split(":")[0].padStart(2, "0");
@@ -64,74 +62,96 @@ const ImageUploadStats = ({ images }) => {
   const mostActiveDay = findMostActiveDay(images);
 
   // Calculate total uploads and max uploads
-  const totalUploads = hourlyData.reduce(
-    (sum, entry) => sum + entry.uploads,
-    0
-  );
+
   const maxUploads = Math.max(...hourlyData.map((entry) => entry.uploads));
 
   return (
-    <div className="w-full py-8 px-2 sm:px-4 md:px-6 lg:px-8">
-      <div className="w-full p-2">
-        <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-4 text-center">
-          Hourly Uploads {mostActiveDay ? `on ${mostActiveDay}` : ""}
+    <div className="w-full pt-8">
+      <div className="w-full mb-6">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-center text-[#365486] mb-4">
+          Hourly Upload Distribution <br />
+          {mostActiveDay ? `${mostActiveDay}` : ""}
         </h2>
-        <ResponsiveContainer width="100%" height={300} className="max-w-full ">
+
+        <ResponsiveContainer width="100%" height={350} className="max-w-full">
           {images.length > 0 ? (
             <LineChart data={hourlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis
                 dataKey="hour"
                 tick={{ fontSize: 10 }}
-                interval="preserveStartEnd"
+                axisLine={{ stroke: "#365486" }}
+                tickLine={{ stroke: "#365486" }}
               />
               <YAxis
                 allowDecimals={false}
                 tick={{ fontSize: 10 }}
+                axisLine={{ stroke: "#365486" }}
+                tickLine={{ stroke: "#365486" }}
                 label={{
                   value: "Uploads",
                   angle: -90,
                   position: "outsideLeft",
+                  fill: "#365486",
                 }}
               />
               <Tooltip
-                contentStyle={{ fontSize: "12px" }}
-                labelStyle={{ fontSize: "10px" }}
+                contentStyle={{
+                  fontSize: "12px",
+                  backgroundColor: "#f0faff",
+                  border: "1px solid #365486",
+                  borderRadius: "8px",
+                }}
+                labelStyle={{
+                  fontSize: "10px",
+                  fontWeight: "bold",
+                }}
               />
               <Line
                 type="monotone"
                 dataKey="uploads"
                 stroke="#365486"
-                strokeWidth={2}
-                activeDot={{ r: 6 }}
+                strokeWidth={3}
+                activeDot={{
+                  r: 6,
+                  fill: "#365486",
+                  stroke: "white",
+                  strokeWidth: 2,
+                }}
               />
             </LineChart>
           ) : (
-            <div className="text-center text-gray-500">
+            <div className="text-center text-gray-500 py-8">
               No upload data available
             </div>
           )}
         </ResponsiveContainer>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-6 py-8 px-2 sm:px-4 md:px-6 lg:px-8">
         <div className="bg-[#e0f5ff] p-2 sm:p-4 rounded-lg">
-          <h3 className="font-semibold text-base sm:text-lg">Total Images</h3>
-          <p className="text-xl sm:text-2xl text-[#365486]">{images.length}</p>
+          <h3 className="font-semibold text-sm sm:text-base md:text-lg">
+            Total Images
+          </h3>
+          <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-[#365486]">
+            {images.length}
+          </p>
         </div>
         <div className="bg-[#e0f5ff] p-2 sm:p-4 rounded-lg">
-          <h3 className="font-semibold text-base sm:text-lg">
+          <h3 className="font-semibold text-sm sm:text-base md:text-lg">
             Most Active Day
           </h3>
-          <p className="text-xl sm:text-2xl text-[#365486]">
+          <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-[#365486]">
             {mostActiveDay || "N/A"}
           </p>
         </div>
         <div className="bg-[#e0f5ff] p-2 sm:p-4 rounded-lg">
-          <h3 className="font-semibold text-base sm:text-lg">
+          <h3 className="font-semibold text-sm sm:text-base md:text-lg">
             Peak Hour Uploads
           </h3>
-          <p className="text-xl sm:text-2xl text-[#365486]">{maxUploads}</p>
+          <p className="text-lg sm:text-lg md:text-xl lg:text-2xl text-[#365486]">
+            {maxUploads}
+          </p>
         </div>
       </div>
     </div>
