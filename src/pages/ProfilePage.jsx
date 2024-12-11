@@ -18,16 +18,16 @@ const ProfilePage = () => {
   } = useProfile();
 
   return (
-    <div className="mx-auto font-poppins">
+    <div className="flex flex-col min-h-screen font-poppins">
       <Header />
-      <main className="mt-[120px] container max-w-5xl mx-auto px-4 py-8 flex-grow">
-        <div className="w-full px-4 py-10 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl text-[#365486] font-bold text-center mb-8">
-              Your Profile
-            </h1>
+      <main className="flex-grow container max-w-5xl mx-auto px-4 flex items-center justify-center">
+        <div className="w-full max-w-sm sm:max-w-lg md:max-w-2xl">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-[#365486] font-bold text-center mb-4 md:mb-8">
+            Your Profile
+          </h1>
 
-            <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 md:p-8">
+          <div className="bg-[#f0f9ff] shadow-lg rounded-lg p-6 md:p-8">
+            <div className="space-y-2 md:space-y-6">
               <UsernameSection
                 userData={userData}
                 usernameState={usernameState}
@@ -35,13 +35,17 @@ const ProfilePage = () => {
                 handleUpdateUsername={handleUpdateUsername}
               />
 
-              <EmailSection email={userData.email} />
+              <div className="border-gray-200">
+                <EmailSection email={userData.email} />
+              </div>
 
-              <PasswordSection
-                passwordState={passwordState}
-                setPasswordState={setPasswordState}
-                handleUpdatePassword={handleUpdatePassword}
-              />
+              <div className="border-gray-200">
+                <PasswordSection
+                  passwordState={passwordState}
+                  setPasswordState={setPasswordState}
+                  handleUpdatePassword={handleUpdatePassword}
+                />
+              </div>
             </div>
           </div>
         </div>

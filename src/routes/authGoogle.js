@@ -5,7 +5,6 @@ import User from "../models/User.js";
 
 dotenv.config();
 
-// Passport configuration with Google OAuth Strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -15,31 +14,39 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Check if user already exists
+        // First, check if user exists by googleId
         let user = await User.findOne({ googleId: profile.id });
 
+        // If no user found by googleId, check by email
         if (!user) {
-          // User does not exist; create a new user
+          user = await User.findOne({ email: profile.emails[0].value });
 
-          // Find the latest username with "user" prefix
-          const lastUser = await User.findOne({ username: /^user\d+$/ })
-            .sort({ username: -1 }) // Sort descending to get the latest
-            .exec();
+          // If user exists by email but no googleId
+          if (user) {
+            // Update the existing user with googleId
+            user.googleId = profile.id;
+            user.isVerified = true; // Ensure user is verified
+            await user.save();
+          } else {
+            // Generate username from email
+            const emailUsername = profile.emails[0].value.split("@")[0];
 
-          // Generate new incremented username
-          let newUsername = "user1"; // Default username if no user exists
-          if (lastUser) {
-            const lastNumber = parseInt(lastUser.username.slice(4)); // Extract the number part
-            newUsername = `user${lastNumber + 1}`; // Increment without leading zeros
+            // Check if username already exists, if so, append a number
+            let username = emailUsername;
+            let counter = 1;
+            while (await User.findOne({ username })) {
+              username = `${emailUsername}${counter}`;
+              counter++;
+            }
+
+            user = await User.create({
+              googleId: profile.id,
+              name: profile.displayName,
+              email: profile.emails[0].value,
+              isVerified: true,
+              username: username,
+            });
           }
-
-          user = await User.create({
-            googleId: profile.id,
-            name: profile.displayName, // Save user's name
-            email: profile.emails[0].value, // Save user's email
-            isVerified: true,
-            username: newUsername, // Set the new username
-          });
         }
         return done(null, user);
       } catch (error) {
@@ -84,10 +91,11 @@ const setupAuthRoutes = (app) => {
         }
 
         // Redirect to home page after successful login or signup
-        return res.redirect(`http://localhost:5173/login-success?id=${user.id}`);
+        return res.redirect(
+          `http://localhost:5173/login-success?id=${user.id}`
+        );
 
         // return res.redirect(`http://localhost:5173/?id=${user.id}`);
-
       });
     })(req, res, next);
   });

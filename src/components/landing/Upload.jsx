@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
-import FileInput from "./Input"; // Komponen input file
-import UploadButton from "./UploadButton"; // Tombol submit untuk upload
+import FileInput from "./Input";
+import UploadButton from "./UploadButton";
+import Popup from "../Popup";
 
 const UploadForm = () => {
-  const [fileNames, setFileNames] = useState([]); // Menyimpan nama file yang dipilih
-  const [selectedFiles, setSelectedFiles] = useState([]); // Menyimpan file yang dipilih
-  const [isLoading, setIsLoading] = useState(false); // State untuk status loading
+  const [fileNames, setFileNames] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // New state for popup
+  const [popup, setPopup] = useState({
+    isOpen: false,
+    message: "",
+    type: "info",
+  });
 
   const handleFileChange = (e) => {
     const files = e.target.files;
     if (files.length > 0) {
-      setFileNames(Array.from(files).map((file) => file.name)); // Menampilkan nama-nama file
-      setSelectedFiles(Array.from(files)); // Menyimpan array file yang dipilih
+      setFileNames(Array.from(files).map((file) => file.name));
+      setSelectedFiles(Array.from(files));
     } else {
       setFileNames([]);
       setSelectedFiles([]);
@@ -22,23 +30,34 @@ const UploadForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ambil username dari local storage
     const userId = localStorage.getItem("userId");
     if (!userId) {
-      alert("Username tidak ditemukan. Silakan login ulang.");
+      setPopup({
+        isOpen: true,
+        message: "Username not found. Please log in again.",
+        type: "error",
+      });
       return;
     }
 
     if (selectedFiles.length === 0) {
-      alert("Please choose at least one file to upload.");
+      setPopup({
+        isOpen: true,
+        message: "Please choose at least one file to upload.",
+        type: "warning",
+      });
       return;
     }
 
-    // Periksa ukuran file
+    // File size check
     for (let file of selectedFiles) {
       if (file.size > 1 * 1024 * 1024 * 1024) {
         // 1GB
-        alert(`File ${file.name} exceeds the 1GB limit.`);
+        setPopup({
+          isOpen: true,
+          message: `File ${file.name} exceeds the 1GB limit.`,
+          type: "error",
+        });
         return;
       }
     }
@@ -49,13 +68,13 @@ const UploadForm = () => {
 
     const formData = new FormData();
     selectedFiles.forEach((file) => {
-      formData.append("foto", file); // Menambahkan setiap file ke FormData
+      formData.append("foto", file);
     });
     formData.append("userId", userId);
     formData.append("date", formattedDate);
     formData.append("time", formattedTime);
 
-    setIsLoading(true); // Set loading ke true sebelum upload dimulai
+    setIsLoading(true);
 
     try {
       const response = await fetch("http://localhost:8080/upload", {
@@ -63,23 +82,40 @@ const UploadForm = () => {
         body: formData,
       });
       const data = await response.json();
-      alert(data.message);
+
+      setPopup({
+        isOpen: true,
+        message: data.message,
+        type: "success",
+      });
     } catch (error) {
-      alert("An error occurred during the upload.");
+      setPopup({
+        isOpen: true,
+        message: "An error occurred during the upload.",
+        type: "error",
+      });
     } finally {
-      setIsLoading(false); // Set loading ke false setelah upload selesai
+      setIsLoading(false);
     }
   };
 
   return (
-    <form
-      className="bg-white shadow rounded-lg p-8 mb-8"
-      onSubmit={handleSubmit}
-    >
-      <FileInput fileNames={fileNames} handleFileChange={handleFileChange} />
+    <>
+      <form
+        className="bg-white shadow rounded-lg p-8 mb-8"
+        onSubmit={handleSubmit}
+      >
+        <FileInput fileNames={fileNames} handleFileChange={handleFileChange} />
+        <UploadButton isLoading={isLoading} />
+      </form>
 
-      <UploadButton isLoading={isLoading} />
-    </form>
+      <Popup
+        isOpen={popup.isOpen}
+        message={popup.message}
+        type={popup.type}
+        onClose={() => setPopup({ ...popup, isOpen: false })}
+      />
+    </>
   );
 };
 
