@@ -25,9 +25,10 @@ export const uploadMedia = async (req, res) => {
       const newFile = new File({
         url: datafile.url,
         userId: req.body.userId,
-        date: req.body.date,
-        time: req.body.time,
+        date: new Date().toISOString().split('T')[0],  // Format YYYY-MM-DD
+        time: new Date().toISOString().split('T')[1].split('.')[0],  // Format HH:MM:SS
       });
+      
       await newFile.save();
 
       uploadResults.push(datafile);
