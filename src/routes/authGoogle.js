@@ -10,8 +10,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://choronocam.vercel.app/auth/google/callback"
-
+      callbackURL: "https://choronocam.vercel.app/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
