@@ -11,6 +11,17 @@
         "src": "/(.*)",
         "dest": "server.js"
       }
-    ]
+    ],
+    "functions": {
+      "api/**.js": {
+        "maxDuration": 10,
+        "memory": 512,
+        "headers": {
+          "Access-Control-Allow-Origin": "https://choronocam.vercel.app",
+          "Access-Control-Allow-Methods": "GET, POST, PUT",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization"
+        }
+      }
+    }
   }
   
