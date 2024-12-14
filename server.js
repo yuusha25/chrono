@@ -27,7 +27,10 @@ const app = express();
 // Middleware CORS
 app.use(
   cors({
-    origin: "https://chronocam.vercel.app/",
+    origin: [
+      "https://chronocam.vercel.app",
+      "http://localhost:5173"
+    ],
     methods: ["GET", "POST", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
