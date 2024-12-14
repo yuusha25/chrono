@@ -30,6 +30,7 @@ app.use(
     origin: [
       "https://chronocam.vercel.app",
       "https://accounts.google.com",
+      "https://chronocam.vercel.app/auth/google/callback",
       "https://chrono-sand.vercel.app/auth/google/callback",
       "https://chrono-sand.vercel.app",
       "http://localhost:5173"
