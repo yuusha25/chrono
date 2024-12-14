@@ -13,7 +13,7 @@ const LoginSuccess = () => {
       localStorage.setItem("userId", userId);
 
       // Arahkan ke halaman utama
-      navigate("/");
+      navigate("https://chronocam.vercel.app/");
     } else {
       console.error("User ID not found in query parameters.");
     }
