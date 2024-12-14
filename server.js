@@ -36,10 +36,11 @@ app.use(cors({
 
 app.get('/proxy/play-log', async (req, res) => {
   try {
+    // Permintaan ke Google Play
     const response = await axios.get('https://play.google.com/log?format=json&hasfast=true&authuser=0');
-    res.json(response.data);
+    res.json(response.data); // Kirimkan data ke frontend
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch data from Google Play', error: error.message });
+    res.status(500).json({ message: 'Gagal mengambil data dari Google Play', error: error.message });
   }
 });
 
