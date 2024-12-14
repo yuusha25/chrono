@@ -3,8 +3,6 @@ import express from "express";
 import passport from "passport";
 import mongoose from "mongoose";
 import session from "express-session";
-// const axios = require('axios');
-import axios from "axios";
 import cors from "cors";
 import setupAuthRoutes from "./src/routes/authGoogle.js";
 import manualAuthRoutes from "./src/routes/authManual.js";
@@ -27,22 +25,17 @@ mongoose
 const app = express();
 
 // Middleware CORS
-app.use(cors({
-  origin: ["https://chronocam.vercel.app", "http://localhost:5173", "https://play.google.com"],
-  methods: ["GET", "POST", "PUT"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-}));
-
-app.get('/proxy/play-log', async (req, res) => {
-  try {
-    // Permintaan ke Google Play
-    const response = await axios.get('https://play.google.com/log?format=json&hasfast=true&authuser=0');
-    res.json(response.data); // Kirimkan data ke frontend
-  } catch (error) {
-    res.status(500).json({ message: 'Gagal mengambil data dari Google Play', error: error.message });
-  }
-});
+app.use(
+  cors({
+    origin: [
+      "https://chronocam.vercel.app",
+      "http://localhost:5173"
+    ],
+    methods: ["GET", "POST", "PUT"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 // Middleware untuk parsing JSON
 app.use(express.json({ limit: "1gb" }));
