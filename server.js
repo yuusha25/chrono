@@ -29,6 +29,7 @@ app.use(
   cors({
     origin: [
       "https://chronocam.vercel.app",
+      "https://chrono-sand.vercel.app",
       "http://localhost:5173"
     ],
     methods: ["GET", "POST", "PUT"],
